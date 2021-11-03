@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="container">
+    <button id="edit">edit</button>
+    <canvas id="canvas" class="canvas edit"></canvas>
+
+</div>
+
+<script>
+    const container = document.getElementById("container")
+    const editButton = document.getElementById("edit")
+    const canvas = document.getElementById("canvas")
+    const context = canvas.getContext("2d")
+    const width = 200
+    const height = 600
+
+    let edit = false
+    let image
+
+    function rotateImage() {
+        if (image == undefined) {
+            image = document.createElement("img")
+            container.append(image)
+        }
+
+
+        context.save()
+        context.translate(width / 2, height / 2)
+        context.rotate(90 * Math.PI / 180)
+        context.drawImage(image, width / -2, height / -2)
+        context.restore()
+
+        image.src = canvas.toDataURL()
+        context.clearRect(0, 0, width, height)
+        //
+    }
+
+    editButton.onclick = () => {
+        // canvas.classList.toggle("edit")
+        edit = !edit
+
+        rotateImage()
+    }
+
+
+
+    const mouse = {x: 0, y: 0};
+    const last_mouse = {x: 0, y: 0};
+
+
+    canvas.width = width
+    canvas.height = height
+
+    /* Mouse Capturing Work */
+    canvas.addEventListener('mousemove', function (e) {
+        last_mouse.x = mouse.x;
+        last_mouse.y = mouse.y;
+
+        mouse.x = e.pageX - this.offsetLeft;
+        mouse.y = e.pageY - this.offsetTop;
+    }, false);
+
+
+    /* Drawing on Paint App */
+    context.lineWidth = 5;
+    context.lineJoin = 'round';
+    context.lineCap = 'round';
+    context.strokeStyle = 'blue';
+
+    canvas.addEventListener('mousedown', function (e) {
+        canvas.addEventListener('mousemove', onPaint, false);
+    }, false);
+
+    canvas.addEventListener('mouseup', function () {
+        canvas.removeEventListener('mousemove', onPaint, false);
+    }, false);
+
+    const onPaint = function () {
+        context.beginPath();
+        context.moveTo(last_mouse.x, last_mouse.y);
+        context.lineTo(mouse.x, mouse.y);
+        context.closePath();
+        context.stroke();
+    };
+
+</script>
+</body>
+</html>

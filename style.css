@@ -1,0 +1,16 @@
+.canvas{
+    display: none;
+}
+
+.edit{
+    display: block;
+    width: 200px;
+    height: 600px;
+    border: 2px solid red;
+}
+
+img{
+    width: 600px;
+    height: 200px;
+    border: yellow 2px solid;
+}
